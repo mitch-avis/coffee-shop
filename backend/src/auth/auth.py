@@ -1,6 +1,3 @@
-"""
-    auth.py
-"""
 import json
 from functools import wraps
 from urllib.request import urlopen
@@ -14,9 +11,7 @@ API_AUDIENCE = "drinks"
 
 
 class AuthError(Exception):
-    """AuthError Exception
-    A standardized way to communicate auth failure modes
-    """
+    """AuthError Exception"""
 
     def __init__(self, error, status_code):
         self.error = error
@@ -64,19 +59,7 @@ def get_token_auth_header():
 
 
 def verify_decode_jwt(token):
-    """verify_decode_jwt
-    @INPUTS
-        token: a json web token (string)
-
-    it should be an Auth0 token with key id (kid)
-    it should verify the token using Auth0 /.well-known/jwks.json
-    it should decode the payload from the token
-    it should validate the claims
-    return the decoded payload
-
-    !!NOTE urlopen has a common certificate error described here:
-    https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-    """
+    """verify_decode_jwt"""
     with urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json") as jsonurl:
         jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
@@ -101,7 +84,9 @@ def verify_decode_jwt(token):
     if rsa_key:
         try:
             auth0_domain = f"https://{AUTH0_DOMAIN}/"
-            payload = jwt.decode(token, rsa_key, algorithms=ALGORITHMS, audience=API_AUDIENCE, issuer=auth0_domain)
+            payload = jwt.decode(
+                token, rsa_key, algorithms=ALGORITHMS, audience=API_AUDIENCE, issuer=auth0_domain
+            )
             return payload
         except jwt.ExpiredSignatureError as ex:
             raise AuthError(
