@@ -11,7 +11,7 @@ db = setup_db(app)
 CORS(app)
 
 
-# @TODO: uncomment the following lines to initialize the datbase
+# uncomment the following lines to initialize the datbase
 # !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 # !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 # !! Running this function will add one
