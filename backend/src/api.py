@@ -135,11 +135,8 @@ def update_drink(payload, id):
         abort(404)
     body = request.get_json()
     print(f"body: {body}")
-    title = body.get("title")
+    drink.title = body.get("title") or drink.title
     recipe = body.get("recipe")
-    print(recipe)
-    if title is not None:
-        drink.title = title
     if recipe is not None:
         ingredient_keys = ("name", "color", "parts")
         # Multiple recipe ingredients
