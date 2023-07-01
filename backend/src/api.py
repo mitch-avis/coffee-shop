@@ -319,7 +319,6 @@ def internal_server_error_handler(error):
                 "success": False,
                 "error": 500,
                 "message": "internal server error",
-                "description": error.description,
             }
         ),
         500,
