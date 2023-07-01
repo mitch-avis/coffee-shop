@@ -77,17 +77,31 @@ def create_drink(payload):
     """
     print(f"payload: {payload}")
     body = request.get_json()
+    print(f"body: {body}")
     title = body.get("title")
     recipe = body.get("recipe")
-    if title is None or recipe is None or not isinstance(recipe, dict):
+    if title is None or recipe is None:
         abort(422)
-    recipe_keys = ("name", "color", "parts")
-    if not all(key in recipe for key in recipe_keys):
+    ingredient_keys = ("name", "color", "parts")
+    # Multiple recipe ingredients
+    if isinstance(recipe, list):
+        for ingredient in recipe:
+            print(f"ingredient: {ingredient}")
+            if not all(key in ingredient for key in ingredient_keys):
+                abort(422)
+    # Single ingredient
+    elif isinstance(recipe, dict):
+        print(f"ingredient: {recipe}")
+        if not all(key in recipe for key in ingredient_keys):
+            abort(422)
+        recipe = [recipe]
+    # Unknown type
+    else:
         abort(422)
     try:
         new_drink = Drink(
             title=title,
-            recipe=json.dumps([recipe]),
+            recipe=json.dumps(recipe),
         )
         new_drink.insert()
         new_drink = [new_drink.long()]
@@ -120,15 +134,30 @@ def update_drink(payload, id):
     if drink is None:
         abort(404)
     body = request.get_json()
+    print(f"body: {body}")
     title = body.get("title")
     recipe = body.get("recipe")
+    print(recipe)
     if title is not None:
         drink.title = title
-    if recipe is not None and isinstance(recipe, dict):
-        recipe_keys = ("name", "color", "parts")
-        if not all(key in recipe for key in recipe_keys):
+    if recipe is not None:
+        ingredient_keys = ("name", "color", "parts")
+        # Multiple recipe ingredients
+        if isinstance(recipe, list):
+            for ingredient in recipe:
+                print(f"ingredient: {ingredient}")
+                if not all(key in ingredient for key in ingredient_keys):
+                    abort(422)
+        # Single ingredient
+        elif isinstance(recipe, dict):
+            print(f"ingredient: {recipe}")
+            if not all(key in recipe for key in ingredient_keys):
+                abort(422)
+            recipe = [recipe]
+        # Unknown type
+        else:
             abort(422)
-        drink.recipe = json.dumps([recipe])
+        drink.recipe = json.dumps(recipe)
     try:
         drink.update()
         drink = [drink.long()]
