@@ -15,8 +15,8 @@ CORS(app)
 # !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 # !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 # !! Running this function will add one
-# with app.app_context():
-#     db_drop_and_create_all()
+with app.app_context():
+    db_drop_and_create_all()
 
 
 # ROUTES
